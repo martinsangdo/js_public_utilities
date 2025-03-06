@@ -1,4 +1,47 @@
 /* 
-Author: Sang Do
-common styles for entire project 
+Author: Martin Sang Do
+customize styles for each page
 */
+/***** PROFILE */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Added gap for spacing */
+    margin-top: 15px;
+}
+
+.tech-stack span {
+    background-color: #ecf0f1; /* Light gray background */
+    padding: 8px 15px;
+    border-radius: 20px; /* Rounded pill shape */
+    font-size: 0.9em;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.tech-stack span:hover {
+    background-color: #d0d8dd; /* Darker gray on hover */
+}
+
+.experience {
+    border-left: 4px solid #3498db; /* Blue border */
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.experience h3 {
+    margin-bottom: 8px;
+}
+
+.project {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition effects */
+}
+
+.project:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+}
+/***** PROFILE */
