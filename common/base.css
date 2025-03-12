@@ -47,3 +47,5 @@ h1 {
         font-size: 2em;
     }
 }
+
+.hidden {display: none !important;}

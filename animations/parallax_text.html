@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="author" content="Martin Sang Do"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Javascript effects</title>
+    <link rel="stylesheet" href="../common/base.css"/>
+    <style>
+        body {background: white !important;padding:50px;}
+        .main_body {width: 90%; height: 200px;}
+        .wf_int-hero_tag{border:1px solid gray;border-radius:12px;flex:none;padding:10px;font-family:Aeonik Fono,sans-serif;text-decoration:none;transition:transform .8s ease-out,color .8s,font-size .8s,box-shadow .8s,background-color .8s,border-color .8s,padding .8s;box-shadow:0 9px 20px #0000000f;}
+        .wf_int-hero_tag:hover{z-index:1001;border-style:solid;border-color: rgb(221, 255, 0);background-color: #e1f2c5;padding:10px;font-size:22px;box-shadow:0 0 0 8px #daecae40;cursor: pointer;}
+        .text-block-10{font-family:Graphik,sans-serif;max-width: 170px;}
+        .text-block-10:hover{max-width: 220px;}
+        .wf_int-hero_center_container{z-index:1000;display:block;position:absolute;}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../common/base.js"></script>
+</head>
+<body>
+    <div id="heroScene" class="main_body">
+        <div class="wf_int-hero_tag text-block-10 hidden"></div>
+        <div class="wf_int-hero_tag text-block-10">Java</div>
+        <div class="wf_int-hero_tag text-block-10">PHP</div>
+        <div class="wf_int-hero_tag text-block-10">Node.js</div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+
+    <script>
+        //todo: change style class name, init more items, add more comment for configurations
+        let depthMin = 0.5;
+        let depthMax = 2;
+        //init Z-index
+        $('.wf_int-hero_tag').each(function(){
+            let random = Math.random() * (depthMax - depthMin) + depthMin;
+            $(this).attr("data-depth", random);
+        });
+
+        var scene = document.getElementById('heroScene');
+        var parallaxInstance = new Parallax(scene, {
+            relativeInput: true,
+            hoverOnly: true,
+            pointerEvents: true,
+        });
+
+        let distMin = 10;
+        let distMax = 90;
+        //init position X,Y of each element
+        $('.wf_int-hero_tag').each(function(){
+            let randomX = Math.random() * (distMax - distMin) + distMin;
+            let randomY = Math.random() * (distMax - distMin) + distMin;
+            $(this).css({"left": randomX + "%" , "top": randomY + "%"})
+        });
+
+    </script>
+</body>
+</html>
