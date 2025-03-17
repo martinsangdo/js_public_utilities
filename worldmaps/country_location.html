@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D3.js World Map</title>
+    <title>D3.js World Map - Highlight Countries</title>
     <style>
         body {
             margin: 0;
@@ -31,6 +31,10 @@
         .country:hover {
             fill: steelblue;
         }
+
+        .highlighted {
+            fill: orange;
+        }
     </style>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
@@ -53,6 +57,8 @@
 
         const path = d3.geoPath().projection(projection);
 
+        var countriesToHighlight = ['Vietnam', 'Singapore', 'United States of America', 'France']; // Corrected country names
+
         d3.json("https://unpkg.com/world-atlas@2/countries-110m.json").then(data => {
             const countries = topojson.feature(data, data.objects.countries).features;
 
@@ -60,7 +66,8 @@
                 .data(countries)
                 .enter().append("path")
                 .attr("class", "country")
-                .attr("d", path);
+                .attr("d", path)
+                .classed("highlighted", d => countriesToHighlight.includes(d.properties.name)); // Highlight the selected countries
         });
     </script>
 </body>
