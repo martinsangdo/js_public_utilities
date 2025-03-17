@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D3.js World Map - Highlight Countries</title>
+    <title>D3.js World Map - Interactive Countries</title>
     <style>
         body {
             margin: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
@@ -35,12 +35,35 @@
         .highlighted {
             fill: orange;
         }
+
+        #country-buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .country-button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+
+        .country-name-display {
+          text-align: center;
+          margin-top: 5px;
+        }
+
     </style>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
 </head>
 <body>
     <div id="map-container"></div>
+    <div id="country-buttons"></div>
 
     <script>
         const width = document.getElementById('map-container').offsetWidth;
@@ -57,8 +80,6 @@
 
         const path = d3.geoPath().projection(projection);
 
-        var countriesToHighlight = ['Vietnam', 'Singapore', 'United States of America', 'France']; // Corrected country names
-
         d3.json("https://unpkg.com/world-atlas@2/countries-110m.json").then(data => {
             const countries = topojson.feature(data, data.objects.countries).features;
 
@@ -66,8 +87,27 @@
                 .data(countries)
                 .enter().append("path")
                 .attr("class", "country")
-                .attr("d", path)
-                .classed("highlighted", d => countriesToHighlight.includes(d.properties.name)); // Highlight the selected countries
+                .attr("d", path);
+
+            const countryButtonsDiv = d3.select("#country-buttons");
+
+            countries.forEach(country => {
+              const countryName = country.properties.name;
+              const button = countryButtonsDiv.append("button")
+                .attr("class", "country-button")
+                .text(countryName);
+
+              const nameDisplay = countryButtonsDiv.append("div")
+                .attr("class", "country-name-display")
+                .text("");
+
+              button.on("click", () => {
+                svg.selectAll(".country")
+                  .classed("highlighted", d => d.properties.name === countryName);
+                nameDisplay.text(countryName);
+              });
+
+            });
         });
     </script>
 </body>
