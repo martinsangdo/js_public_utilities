@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Image Fade Out</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+  }
+
+  #imageContainer {
+    position: relative;
+  }
+
+  #myImage {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #fadeOutButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .image-part {
+    position: absolute;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+  }
+</style>
+</head>
+<body>
+
+<div id="imageContainer">
+  <img id="myImage" src="https://cdn.shopify.com/s/files/1/0623/6356/6133/files/blog_easyevergreentreeidentificationpart1pinetrees__6_480x480.jpg?v=1717776927" alt="Image">
+</div>
+<button id="fadeOutButton">Fade Out</button>
+<div id="imageContainer1">
+
+</div>
+
+<script>
+  const imageContainer = document.getElementById('imageContainer');
+  const image = document.getElementById('myImage');
+  const button = document.getElementById('fadeOutButton');
+
+  button.addEventListener('click', () => {
+    const columns = 10;
+    const rows = 20;
+    const imageWidth = image.offsetWidth;
+    const imageHeight = image.offsetHeight;
+    const partWidth = imageWidth / columns;
+    const partHeight = imageHeight / rows;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
+        const part = document.createElement('div');
+        part.className = 'image-part';
+        part.style.width = `${partWidth}px`;
+        part.style.height = `${partHeight}px`;
+        part.style.left = `${col * partWidth}px`;
+        part.style.top = `${row * partHeight}px`;
+        part.style.backgroundImage = `url(${image.src})`;
+        part.style.backgroundPosition = `-${col * partWidth}px -${row * partHeight}px`;
+
+        // imageContainer.appendChild(part);
+        document.getElementById('imageContainer1').appendChild(part);
+
+        // Fade out with delay based on column
+        setTimeout(() => {
+          part.style.opacity = 0;
+        }, col * 100); // Adjust delay for fade effect
+      }
+    }
+    image.style.display = 'none';
+    button.style.display = 'none';
+
+    setTimeout(() => {
+      imageContainer.style.display = 'none';
+    }, columns * 100 + 1000); // Hide container after all fade outs
+  });
+</script>
+
+</body>
+</html>
