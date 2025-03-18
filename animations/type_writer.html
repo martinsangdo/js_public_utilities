@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Typing Effect</title>
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#text {
+  font-size: 2em;
+}
+</style>
+</head>
+<body>
+
+<div id="text"></div>
+
+<script>
+const text = "Hello I am a virtual assistant";
+const textElement = document.getElementById("text");
+let charIndex = 0;
+
+function typeWriter() {
+  if (charIndex < text.length) {
+    textElement.textContent += text.charAt(charIndex);
+    charIndex++;
+    setTimeout(typeWriter, 100); // 100 milliseconds = 0.1 second. to make it 1 second, change to 1000
+  }
+}
+
+typeWriter();
+</script>
+
+</body>
+</html>
