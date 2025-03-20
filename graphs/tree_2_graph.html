@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Tree Visualization</title>
+<title>Simplified AWS Tree</title>
+<meta ref="https://gojs.net/latest/samples/familyTree.html"/>
 <style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  #tree-container {
+    text-align: center;
+  }
   .node {
     display: inline-block;
     padding: 5px 10px;
     border: 1px solid black;
     margin: 2px;
-    white-space: pre; /* Preserve whitespace for border drawing */
+    white-space: pre;
+    text-align: center;
+  }
+  .link {
+    text-align: center;
+  }
+  .level {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
   }
 </style>
 </head>
@@ -17,83 +37,60 @@
 <div id="tree-container"></div>
 
 <script>
-function drawTree(tree, containerId) {
+function drawTree(containerId) {
   const container = document.getElementById(containerId);
-  container.innerHTML = ''; // Clear previous tree
+  container.innerHTML = '';
 
-  function drawNode(node, level, parentOffset = 0) {
+  const tree = {
+    name: 'CloudFront',
+    children: [
+      { name: 'API Gateway' },
+      { name: 'S3 (Static)' }
+    ]
+  };
+
+  function createNode(node) {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('node');
-    nodeDiv.textContent = node.name; // Assuming each node has a 'name' property
-
-    let offset = parentOffset;
-    if (level > 0 && node.children && node.children.length > 0) {
-      offset = parentOffset;
-    }
-
-    if (level > 0) {
-        let padding = "";
-        for(let i = 0; i < offset; i++){
-            padding += " ";
-        }
-        container.innerHTML += padding + "|\n";
-    }
-
-    if (node.children && node.children.length > 0) {
-      const childOffsets = [];
-      let currentOffset = 0;
-
-      for (let i = 0; i < node.children.length; i++) {
-
-        let link = "";
-        let nodeWidth = node.name.length + 4; // Add padding
-
-        for(let j = 0; j< currentOffset; j++){
-            link += " ";
-        }
-
-        for(let j=0; j < nodeWidth; j++){
-            link += "-";
-        }
-
-        container.innerHTML += link + "\n";
-        drawNode(node.children[i], level + 1, currentOffset);
-        childOffsets.push(currentOffset);
-        currentOffset += nodeWidth;
-      }
-    } else {
-      container.appendChild(nodeDiv);
-      container.innerHTML += "\n";
-
-    }
+    nodeDiv.textContent = node.name;
+    return nodeDiv;
   }
 
-  drawNode(tree, 0);
+  function createLink() {
+    const linkDiv = document.createElement('div');
+    linkDiv.classList.add('link');
+    linkDiv.textContent = '|\nV';
+    return linkDiv;
+  }
+
+  function createHorizontalLink() {
+    const linkDiv = document.createElement('div');
+    linkDiv.classList.add('link');
+    linkDiv.textContent = '---------------------\n';
+    return linkDiv;
+  }
+
+  const cloudFrontNode = createNode(tree);
+  const apiGatewayNode = createNode(tree.children[0]);
+  const s3Node = createNode(tree.children[1]);
+
+  const level0 = document.createElement('div');
+  level0.classList.add('level');
+  level0.appendChild(cloudFrontNode);
+  container.appendChild(level0);
+
+  const linkDiv = createLink();
+  container.appendChild(linkDiv); // Add the link below CloudFront
+
+  const level1 = document.createElement('div');
+  level1.classList.add('level');
+  level1.appendChild(apiGatewayNode);
+  level1.appendChild(s3Node);
+  container.appendChild(level1);
+  level1.insertBefore(createHorizontalLink(), s3Node);
 }
 
-// Example tree structure
-const myTree = {
-  name: 'Root',
-  children: [
-    {
-      name: 'Child 1',
-      children: [
-        { name: 'Grandchild 1.1' },
-        { name: 'Grandchild 1.2' },
-        { name: 'Grandchild 1.3', children:[{name:"greatChild"}]}
-      ],
-    },
-    {
-      name: 'Child 2',
-      children: [
-        { name: 'Grandchild 2.1' },
-      ],
-    },
-    {name: 'Child 3'}
-  ],
-};
-
-drawTree(myTree, 'tree-container');
+drawTree('tree-container');
 </script>
 
 </body>
