@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Draw Shapes on Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f0e3;
+        }
+
+        canvas {
+            border: 1px solid #ddd;
+            background-color: transparent; /* Make canvas background transparent */
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+    <button id="exportButton">Export as Image</button>
+    <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Make the canvas background transparent
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // --- Drawing the shapes ---
+        const centerX = canvas.width * 0.25;
+        const centerY = canvas.height * 0.5;
+        const outerRadius = 70;
+        const innerRadius = 50;
+
+        // Draw the double circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, outerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const textArray = ["Your", "paragraph", "text", "text", "text", "text"];
+        const numTexts = textArray.length;
+        const anglePerText = (2 * Math.PI) / numTexts;
+        const textRadius = outerRadius + 20;
+
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        for (let i = 0; i < numTexts; i++) {
+            const angle = i * anglePerText;
+            const x = centerX + textRadius * Math.cos(angle);
+            const y = centerY + textRadius * Math.sin(angle);
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle + Math.PI / 2);
+            ctx.fillText(textArray[i], 0, 0);
+            ctx.restore();
+        }
+
+        const rectWidth = 60;
+        const rectHeight = 10;
+        const rectSpacing = 20;
+        const startX = centerX + outerRadius + 100;
+        const startY = centerY - rectHeight * 1.5 - rectSpacing;
+
+        for (let i = 0; i < 3; i++) {
+            ctx.fillStyle = "#4299e1";
+            ctx.fillRect(startX, startY + i * rectSpacing, rectWidth, rectHeight);
+
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "black";
+            const text = "Your paragraph text";
+            ctx.fillText(text, startX + rectWidth + 10, startY + i * rectSpacing + rectHeight - 1);
+        }
+        const text = "Your paragraph text";
+        ctx.fillText(text, startX - 100 , startY + 3 * rectSpacing + rectHeight - 1);
+
+        // --- Export to Image ---
+        const exportButton = document.getElementById("exportButton");
+        exportButton.addEventListener("click", function() {
+            const dataURL = canvas.toDataURL("image/png");
+            const a = document.createElement("a");
+            a.href = dataURL;
+            a.download = "canvas_image.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    </script>
+</body>
+</html>

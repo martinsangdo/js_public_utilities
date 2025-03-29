@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Draw Shapes on Canvas</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f0e3;
+        }
+
+        canvas {
+            border: 1px solid #ddd;
+            background-color: transparent; /* Make canvas background transparent */
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+    <script>
+        /* idea draw a circle and text around them */
+
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Make the canvas background transparent
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // --- Drawing the shapes ---
+        const centerX = canvas.width * 0.5;
+        const centerY = canvas.height * 0.5;
+        const radius = 70;
+
+        // Draw the circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        //draw percentages of circle
+        const percents = [67, 15, 9, 5, 4]; //total 100% of 360 degree
+        const rotationDegrees = -90;
+        const rotationRadians = rotationDegrees * Math.PI / 180; // Convert degrees to radians
+        //draw remaining lines from circle center
+        var sumAngle = 0;
+        for (var i=0; i<percents.length; i++){
+            const angleDegrees = (sumAngle * 360 / 100) + rotationDegrees; // Calculate angle in degrees
+            const angleRadians = angleDegrees * Math.PI / 180; // Convert to radians
+
+            const endX = centerX + radius * Math.cos(angleRadians);
+            const endY = centerY + radius * Math.sin(angleRadians);
+
+            sumAngle += percents[i];
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+        }
+        //draw lines around circle
+
+
+
+
+    </script>
+</body>
+</html>
