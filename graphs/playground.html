@@ -57,6 +57,8 @@
         ctx.stroke();
         //draw percentages of circle
         const percents = [67, 15, 9, 5, 4]; //total 100% of 360 degree
+        const noOfLines = [13, 18, 3, 6, 7]; //total 100% of 360 degree
+
         const rotationDegrees = -90;
         const rotationRadians = rotationDegrees * Math.PI / 180; // Convert degrees to radians
         //draw remaining lines from circle center
@@ -74,12 +76,10 @@
             ctx.moveTo(centerX, centerY);
             ctx.lineTo(endX, endY);
             ctx.stroke();
+            //draw lines around part of circles
+
+
         }
-        //draw lines around circle
-
-
-
-
     </script>
 </body>
 </html>

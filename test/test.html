@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      function loadDoc() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+          const rawData = JSON.parse(xhttp.responseText);
+          document.getElementById("demo").innerHTML = rawData['products'][0]['title'];
+        }
+        xhttp.open("GET", "https://dummyjson.com/products");
+        xhttp.send();
+      }
+    </script>
+  </head>
+  <body>
+
+    <button type="button" onclick="loadDoc();">Get data</button>
+
+    <div id="demo">
+
+    </div>
+
+  </body>
+</html>
