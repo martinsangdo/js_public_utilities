@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Stage Canvas Animation</title>
+<style>
+  body { background: #fff; margin: 0; }
+  canvas { background: white; display: block; }
+</style>
+</head>
+<body>
+    <canvas id="myCanvas" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Animation stages
+        const stage1Start = 0;   // seconds
+        const stage1End   = 10;  // seconds
+        const stage2Start = 11;  // seconds
+        const stage2End   = 20;  // seconds
+
+        // Stage 1: countdown-like number change
+        let number = 300; // start value
+        const numberTarget = 1000; // end value
+
+        // Stage 2: moving rectangle
+        let rectX = 50, rectY = 200;     // start position
+        const rectX1 = 600, rectY1 = 200; // end position
+        const rectSpeed = 100; // pixels per second
+
+        let startTime = null;
+
+        //timestamp is the current timestamp (now)
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = (timestamp - startTime) / 1000; //duration from the beginning time
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);   //clear the canvas
+
+            if (elapsed >= stage1Start && elapsed <= stage1End) {
+                // Progress from 0 to 1
+                const progress = (elapsed - stage1Start) / (stage1End - stage1Start);
+                number = 300 + (numberTarget - 300) * progress;     //how many percent left
+                ctx.font = '48px Arial';
+                ctx.fillStyle = 'black';
+                ctx.fillText(Math.floor(number), canvas.width / 2 - 50, canvas.height / 2);
+            }
+
+            if (elapsed >= stage2Start && elapsed <= stage2End) {
+                const progress = (elapsed - stage2Start) / (stage2End - stage2Start);
+                const x = rectX + (rectX1 - rectX) * progress;
+                const y = rectY + (rectY1 - rectY) * progress;
+                ctx.fillStyle = 'skyblue';
+                ctx.fillRect(x, y, 100, 50);
+            }
+
+            if (elapsed < stage2End) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        requestAnimationFrame(animate); //call the function for the next repaint
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Moving Rectangle with Countdown</title>
+<style>
+  body { background: #fff; margin: 0; }
+  canvas { background: white; display: block; }
+</style>
+</head>
+<body>
+    <script src="js/recording.js"></script>
+    <button id="recordBtn">Start Recording</button>
+
+<canvas id="myCanvas" width="800" height="400"></canvas>
+<script>
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+const duration = 10; // seconds
+const numberStart = 100;
+const numberEnd = 200;
+
+const rectY = 150, rectW = 200, rectH = 100;
+const startX = 0;
+const endX = canvas.width - rectW;
+
+let startTime = null;
+
+function animate(timestamp) {
+  if (!startTime) startTime = timestamp;
+  const elapsed = (timestamp - startTime) / 1000; // seconds
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (elapsed <= duration) {
+    // Calculate animation progress (0 to 1)
+    const progress = elapsed / duration;
+
+    // Rectangle X position (left to right)
+    const rectX = startX + (endX - startX) * progress;
+
+    // Countdown number from 100 to 200
+    const number = numberStart + (numberEnd - numberStart) * progress;
+
+    // Draw rectangle
+    ctx.fillStyle = 'skyblue';
+    ctx.fillRect(rectX, rectY, rectW, rectH);
+
+    // Draw number centered inside rectangle
+    ctx.fillStyle = 'black';
+    ctx.font = '48px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(Math.floor(number), rectX + rectW / 2, rectY + rectH / 2);
+  }
+
+  if (elapsed < duration) {
+    requestAnimationFrame(animate);
+  }
+}
+
+requestAnimationFrame(animate);
+
+// Recording logic
+const recordBtn = document.getElementById('recordBtn');
+            let recorder, chunks = [], recording = false;
+            recordBtn.addEventListener('click', () => {
+                if (!recording) {
+                    startRecording('test_ball_running');
+                } else {
+                    stopRecording();
+                }
+            });
+            
+</script>
+</body>
+</html>
