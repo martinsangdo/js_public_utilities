@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Running Circle Canvas Capture (4K Ultra Smooth)</title>
+<style>
+  body {
+    margin: 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  canvas {
+    background: white;
+    display: block;
+    border: 1px solid #ccc;
+  }
+  button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<canvas id="myCanvas" width="3840" height="2160"></canvas>
+<button id="recordBtn">Start Recording</button>
+<script>
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d', { alpha: false }); // alpha false for better performance
+const recordBtn = document.getElementById('recordBtn');
+
+const radius = 48;
+let x = 200, y = 200;
+let target = pickTarget();
+let speed = 1000; // slightly faster for playback
+let lastTime = performance.now();
+
+function pickTarget() {
+  return {
+    x: Math.random() * (canvas.width - radius * 2) + radius,
+    y: Math.random() * (canvas.height - radius * 2) + radius
+  };
+}
+
+function loop(now) {
+  const dt = Math.min((now - lastTime) / 1000, 0.0167); // clamp to ~60 FPS delta
+  lastTime = now;
+
+  const dx = target.x - x;
+  const dy = target.y - y;
+  const dist = Math.hypot(dx, dy);
+  if (dist < speed * dt) {
+    x = target.x;
+    y = target.y;
+    target = pickTarget();
+  } else {
+    x += (dx / dist) * speed * dt;
+    y += (dy / dist) * speed * dt;
+  }
+
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  const grad = ctx.createRadialGradient(x, y, radius * 0.3, x, y, radius);
+  grad.addColorStop(0, '#8aa7ff');
+  grad.addColorStop(1, '#fda4af');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+
+// Recording logic
+let recorder, chunks = [], recording = false;
+recordBtn.addEventListener('click', () => {
+  if (!recording) {
+    startRecording();
+  } else {
+    stopRecording();
+  }
+});
+
+function startRecording() {
+  const stream = canvas.captureStream(60);
+  recorder = new MediaRecorder(stream, {
+    mimeType: 'video/webm;codecs=vp9',
+    videoBitsPerSecond: 50_000_000 // high bitrate for smoothness
+  });
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = saveRecording;
+  recorder.start(16); // collect data frequently (~60 fps)
+  recording = true;
+  recordBtn.textContent = 'Stop Recording';
+}
+
+function stopRecording() {
+  recorder.stop();
+  recording = false;
+  recordBtn.textContent = 'Start Recording';
+}
+
+function saveRecording() {
+  const blob = new Blob(chunks, { type: 'video/webm' });
+  chunks = [];
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'running_circle_4k_ultrasmooth.webm';
+  a.click();
+}
+</script>
+</body>
+</html>
+<!--
+/Users/sang/Downloads/SetupFiles/ffmpeg/ffmpeg -i running_circle_4k_ultrasmooth.webm -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p running_circle_4k_ultrasmooth.mp4
+-->
