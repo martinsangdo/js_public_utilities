@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Canvas World Map (No Poles, No Wasted Space)</title>
+<style>
+  body { margin: 0; background: white; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="mapCanvas" width="1200" height="600"></canvas>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = '#eee'; //white color
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+const highlightCountries = {
+  "United States": "red",
+  "Brazil": "green",
+  "Japan": "blue"
+};
+
+fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+  .then(res => res.json())
+  .then(worldData => {
+    // 1. Remove poles
+    const filteredFeatures = worldData.features.filter(f => {
+      const name = f.properties.name;
+      const bounds = d3.geoBounds(f);
+      return name !== "Antarctica" && bounds[0][1] <= 85 && bounds[1][1] >= -85;
+    });
+    const filteredData = { type: "FeatureCollection", features: filteredFeatures };
+
+    // 2. Fit projection to filtered data
+    const projection = d3.geoMercator()
+      .fitSize([canvas.width, canvas.height], filteredData);
+
+    const path = d3.geoPath(projection, ctx);
+
+    // 3. Draw
+    filteredData.features.forEach(feature => {
+      const countryName = feature.properties.name;
+      ctx.beginPath();
+      path(feature);
+      ctx.fillStyle = highlightCountries[countryName] || "#cccccc";
+      ctx.fill();
+      ctx.strokeStyle = "#999";
+      ctx.stroke();
+    });
+  });
+</script>
+</body>
+</html>
