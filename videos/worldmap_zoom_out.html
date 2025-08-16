@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Highlight Country Every 3s</title>
+<style>
+  body { margin: 0; background: white; }
+  canvas { display: block; margin: auto; background: white; }
+</style>
+</head>
+<body>
+<canvas id="mapCanvas" width="1200" height="600"></canvas>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+
+fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+  .then(res => res.json())
+  .then(worldData => {
+    // Filter out poles
+    const countries = worldData.features.filter(f => {
+      const name = f.properties.name;
+      const bounds = d3.geoBounds(f);
+      return name !== "Antarctica" && bounds[0][1] <= 85 && bounds[1][1] >= -85;
+    });
+
+    const projection = d3.geoMercator()
+      .fitSize([canvas.width, canvas.height], { type: "FeatureCollection", features: countries });
+    const path = d3.geoPath(projection, ctx);
+
+    let currentIndex = 0;
+    let lastSwitch = performance.now();
+    const interval = 3000; // 3 seconds
+
+    function draw(time) {
+      // Switch to next country every 3s
+      if (time - lastSwitch >= interval) {
+        currentIndex = (currentIndex + 1) % countries.length;
+        lastSwitch = time;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      countries.forEach((feature, i) => {
+        ctx.beginPath();
+        path(feature);
+        if (i === currentIndex) {
+          ctx.fillStyle = "#ff6666"; // highlight color
+        } else {
+          ctx.fillStyle = "#cccccc"; // background color
+        }
+        ctx.fill();
+        ctx.strokeStyle = "#999";
+        ctx.stroke();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+  });
+</script>
+</body>
+</html>

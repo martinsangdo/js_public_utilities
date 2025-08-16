@@ -1,0 +1,89 @@
+Sample channels:
+https://www.youtube.com/@dataisbeautiful8913/videos 97k subs
+https://www.youtube.com/@HappyEarthed 539k
+
+
+. Global Population & Society
+
+World Bank Data → https://data.worldbank.org/
+
+Population, urbanization, life expectancy, fertility rates.
+
+United Nations Data → https://data.un.org/
+
+Historical demographic stats.
+
+Our World in Data → https://ourworldindata.org/
+
+Population, education, health, and social metrics with CSV downloads.
+
+2. Economy & Wealth
+
+IMF Data → https://www.imf.org/en/Data
+
+GDP, trade balances, inflation.
+
+World Bank GDP Dataset → https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
+
+GDP by year for all countries.
+
+Forbes Billionaires List Archive → https://www.forbes.com/billionaires/
+
+Need to scrape yearly pages for historical rankings.
+
+3. Technology & Internet
+
+StatCounter Global Stats → https://gs.statcounter.com/
+
+Market share of browsers, OS, search engines, mobile brands.
+
+GSMA Intelligence → https://www.gsmaintelligence.com/
+
+Mobile subscriptions and adoption rates.
+
+Internet World Stats → https://www.internetworldstats.com/
+
+Internet penetration by region/country.
+
+4. Sports & Entertainment
+
+YouTube Statistics (Social Blade) → https://socialblade.com/
+
+Subscribers and views over time.
+
+Olympic Data → https://olympics.com/en/olympic-games/
+
+Medal counts per country per year (scrapable from official site).
+
+Box Office Mojo → https://www.boxofficemojo.com/
+
+Film revenue stats over decades.
+
+5. Environment & Climate
+
+Climate Data Portal (World Bank) → https://climateknowledgeportal.worldbank.org/
+
+CO₂ emissions, temperature change.
+
+Global Carbon Atlas → http://www.globalcarbonatlas.org/
+
+Historical carbon emission data.
+
+IRENA → https://www.irena.org/Statistics
+
+Renewable energy capacity and usage by country.
+
+Flags: https://flagpedia.net/index
+
+
+https://ourworldindata.org/grapher/deaths-in-armed-conflicts-by-region?time=earliest..2025
+
+<!-- script
+Year 1: 
+    - Display 10 horizontal bars
+    - Number at the right end
+    - Icon or name inside the bar
+
+Year 2: ()
+    - 
+-->
