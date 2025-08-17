@@ -24,12 +24,15 @@
           updateClock();
           // Update every second
           setInterval(updateClock, 1000);
-          get_max_values();
+          let gapValue = get_gap_values();  //the length between max and min values
+          print(gapValue);
 
           const canvas = document.getElementById('myCanvas');
           const ctx = canvas.getContext('2d');
           ctx.fillStyle = '#fff'; //white color
           ctx.fillRect(0, 0, canvas.width, canvas.height);
+          //
+          let scalingFactor = (canvas.width - 250) / gapValue;
           //
           let colors = [
             "#e6194b","#3cb44b","#ffe119","#4363d8","#f58231",
@@ -37,14 +40,19 @@
           ];
           let labels = ["Burkina Faso", "Congo", "Mexico", "Pakistan", "Palestine", "Russia", "Somalia", "Sudan", "Syria", "Ukraine"];
           //
+          var data_list = transform_data(labels);
+          print(data_list)
+          
+          var timer = null;
+          var currentLoop = 0;  //simulate year index
           // Initial random data
-          let data = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
+          let data = data_list[currentLoop];  //Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
 
           // Target data (changes every 5s)
           let targetData = [...data];
           let animationStart = null;
-          const duration = 10000; //animation time
-          const delay_each_animation = 3000;  //break time between animation
+          const duration = 12000; //animation time for 1 year (like 12 months)
+          const delay_each_animation = 100;  //break time between an animation
 
           // Position cache for smooth reorder
           let positions = labels.map((_, i) => i);
@@ -75,7 +83,7 @@
             sortedIndices.forEach((id) => {
               const value = currentData[id];
               const y = 50 + positions[id] * (barHeight + gap);
-              const width = value * 5; // scaling factor
+              const width = value * scalingFactor; // scaling factor
 
               ctx.fillStyle = colors[id];
               ctx.fillRect(150, y, width, barHeight);
@@ -98,8 +106,12 @@
               positions = sortedIndices.map((id, idx)=>idx);
 
               // Trigger next change
-              setTimeout(() => {
-                targetData = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
+              timer = setTimeout(() => {
+                if (currentLoop >= data_list.length ){
+                  clearInterval(timer);
+                  return;
+                }
+                targetData = data_list[currentLoop++];
                 animationStart = null;
                 requestAnimationFrame(draw);
               }, delay_each_animation);
@@ -109,9 +121,6 @@
           // Start animation
           requestAnimationFrame(draw);
 
-
-
-        
         </script>
         <script src="js/recording.js"></script>
     </body>

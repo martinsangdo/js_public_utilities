@@ -56,7 +56,7 @@ OBJECT_METADATA = {
 BAR_DATA = {
   "2016": {
     "Burkina Faso": 25,
-    "Democratic Republic of Congo": 2143,
+    "Congo": 2143,
     "Mexico": 4275,
     "Pakistan": 1086,
     "Palestine": 0,
@@ -68,7 +68,7 @@ BAR_DATA = {
   },
   "2017": {
     "Burkina Faso": 34,
-    "Democratic Republic of Congo": 5822,
+    "Congo": 5822,
     "Mexico": 9716,
     "Pakistan": 952,
     "Palestine": 0,
@@ -80,7 +80,7 @@ BAR_DATA = {
   },
   "2018": {
     "Burkina Faso": 171,
-    "Democratic Republic of Congo": 2262,
+    "Congo": 2262,
     "Mexico": 11175,
     "Pakistan": 485,
     "Palestine": 51,
@@ -92,7 +92,7 @@ BAR_DATA = {
   },
   "2019": {
     "Burkina Faso": 1245,
-    "Democratic Republic of Congo": 2395,
+    "Congo": 2395,
     "Mexico": 10416,
     "Pakistan": 294,
     "Palestine": 48,
@@ -104,7 +104,7 @@ BAR_DATA = {
   },
   "2020": {
     "Burkina Faso": 1152,
-    "Democratic Republic of Congo": 3847,
+    "Congo": 3847,
     "Mexico": 13323,
     "Pakistan": 392,
     "Palestine": 0,
@@ -116,7 +116,7 @@ BAR_DATA = {
   },
   "2021": {
     "Burkina Faso": 1454,
-    "Democratic Republic of Congo": 3476,
+    "Congo": 3476,
     "Mexico": 15020,
     "Pakistan": 431,
     "Palestine": 252,
@@ -128,7 +128,7 @@ BAR_DATA = {
   },
   "2022": {
     "Burkina Faso": 2702,
-    "Democratic Republic of Congo": 5498,
+    "Congo": 5498,
     "Mexico": 12508,
     "Pakistan": 685,
     "Palestine": 84,
@@ -140,7 +140,7 @@ BAR_DATA = {
   },
   "2023": {
     "Burkina Faso": 6132,
-    "Democratic Republic of Congo": 3854,
+    "Congo": 3854,
     "Mexico": 10830,
     "Pakistan": 1161,
     "Palestine": 26129,
@@ -152,7 +152,7 @@ BAR_DATA = {
   },
   "2024": {
     "Burkina Faso": 4253,
-    "Democratic Republic of Congo": 5054,
+    "Congo": 5054,
     "Mexico": 10940,
     "Pakistan": 1845,
     "Palestine": 21399,
@@ -164,7 +164,7 @@ BAR_DATA = {
   },
   "2025": {
     "Burkina Faso": 1847,
-    "Democratic Republic of Congo": 10623,
+    "Congo": 10623,
     "Mexico": 1417,
     "Pakistan": 1316,
     "Palestine": 7138,
