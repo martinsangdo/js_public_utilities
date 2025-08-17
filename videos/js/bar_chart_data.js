@@ -1,58 +1,5 @@
 //Data of bar chart
 
-OBJECT_METADATA = {
-    "a": {
-      "name": "Ukraine",
-      "avatar": "",
-      "color": "red"
-    },
-    "b": {
-      "name": "Middle East",
-      "avatar": "",
-      "color": "blue"
-    },
-    "c": {
-      "name": "Congo",
-      "avatar": "",
-      "color": "green"
-    },
-    "d": {
-      "name": "Palestine",
-      "avatar": "",
-      "color": "orange"
-    },
-    "e": {
-      "name": "Sudan",
-      "avatar": "",
-      "color": "purple"
-    },
-    "f": {
-      "name": "Somalia",
-      "avatar": "",
-      "color": "cyan"
-    },
-    "g": {
-      "name": "Americas",
-      "avatar": "",
-      "color": "magenta"
-    },
-    "h": {
-      "name": "Pakistan",
-      "avatar": "",
-      "color": "gold"
-    },
-    "i": {
-      "name": "Myanmar",
-      "avatar": "",
-      "color": "lime"
-    },
-    "j": {
-      "name": "Iran",
-      "avatar": "",
-      "color": "black"
-    }
-  };
-
 BAR_DATA = {
   "2016": {
     "Burkina Faso": 25,

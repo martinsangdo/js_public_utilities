@@ -11,9 +11,9 @@
   </head>
     <body>
         <!-- for testing animation -->
-        <!-- <canvas id="myCanvas" width="960" height="540"></canvas>   -->
+        <canvas id="myCanvas" width="960" height="540"></canvas>  
         <!-- Full HD size -->
-        <canvas id="myCanvas" width="1920" height="1080"></canvas>  
+        <!-- <canvas id="myCanvas" width="1920" height="1080"></canvas>   -->
 
         <button id="recordBtn">Start Recording</button>
         <div id="divClock"></div>
@@ -37,7 +37,7 @@
           var canvasH = canvas.height;
 
           var canvasScale = (canvasW / 960);
-          var leftPositionBar = (canvasScale == 2)?250:130;
+          var leftPositionBar = (canvasScale == 2)?250:160;
 
           ctx.fillRect(0, 0, canvasW, canvasH);
           //
@@ -48,6 +48,7 @@
             "#911eb4","#46f0f0","#f032e6","#bcf60c","#fabebe"
           ];
           let labels = ["Burkina Faso", "Congo", "Mexico", "Pakistan", "Palestine", "Russia", "Somalia", "Sudan", "Syria", "Ukraine"];
+          
           //
           var data_list = transform_data(labels);
           print('data_list', data_list);
@@ -62,15 +63,38 @@
           let animationStart = null;
           const duration = 12000; //animation time for 1 year (like 12 months)
           const delay_each_animation = 100;  //break time between an animation
+          //init images
+          let img_urls = ['https://cdn-icons-png.flaticon.com/512/555/555561.png', 'https://cdn-icons-png.flaticon.com/512/555/555421.png', 
+            'https://cdn-icons-png.flaticon.com/128/14009/14009736.png', 'https://cdn-icons-png.flaticon.com/128/14009/14009752.png',
+            'https://cdn-icons-png.flaticon.com/128/555/555509.png', 'https://cdn-icons-png.flaticon.com/128/555/555451.png',
+            'https://cdn-icons-png.flaticon.com/128/555/555481.png', 'https://cdn-icons-png.flaticon.com/128/3373/3373307.png',
+            'https://cdn-icons-png.flaticon.com/128/7941/7941803.png', 'https://cdn-icons-png.flaticon.com/128/3373/3373317.png'
+          ]
+          let img_list = [];
+          var imgLoaded = false;
+          for (var i=0; i<img_urls.length; i++){
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = img_urls[i];
+            img_list.push(img);
+            img.onload = function(x) {
+              imgLoaded = true;
+            };
+          }
 
           // Position cache for smooth reorder
           let positions = labels.map((_, i) => i);
-
+          //somehow currentLoop is 2 at the beginning
           function draw(timestamp) {
+            //
             ctx.clearRect(0, 0, canvasW, canvasH);
             // Always paint background
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvasW, canvasH);
+            //draw year
+            ctx.fillStyle = "#BA6352";
+            ctx.font = (32 * canvasScale) + "px Arial";
+            ctx.fillText(2016 + currentLoop - 3, canvasW / 2 - 20, canvasH - 20); //don't know why current Loop is latency
 
             if (!animationStart) animationStart = timestamp;
             const progress = Math.min((timestamp - animationStart) / duration, 1);
@@ -93,6 +117,7 @@
             const barHeight = 30 * canvasScale;
             const gap = 15 * canvasScale;
             sortedIndices.forEach((id) => {
+              //id is index of the item
               const value = currentData[id];
               const y = 50 + positions[id] * (barHeight + gap);
               const width = value * scalingFactor; // scaling factor
@@ -101,11 +126,15 @@
               ctx.fillRect(leftPositionBar, y, width, barHeight);
 
               // Label
-              ctx.fillStyle = "#000";
+              ctx.fillStyle = "#BA6352";
               ctx.font = (16 * canvasScale) + "px Arial";
-              ctx.fillText(labels[id], 15, y + barHeight/1.5);
-
+              ctx.fillText(labels[id], 15 + barHeight*1.3, y + barHeight/1.5);
+              // Only draw image if it's loaded
+              if (imgLoaded) {
+                ctx.drawImage(img_list[id], 15, y, barHeight*1.2, barHeight);
+              }
               // Value (animated counting)
+              ctx.fillStyle = "#000";
               let displayVal = Math.floor(data[id] + (targetData[id] - data[id]) * progress);
               ctx.fillText(displayVal, leftPositionBar + 10 + width, y + barHeight/1.5);
             });
