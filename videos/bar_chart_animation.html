@@ -11,9 +11,9 @@
   </head>
     <body>
         <!-- for testing animation -->
-        <canvas id="myCanvas" width="960" height="540"></canvas>  
+        <!-- <canvas id="myCanvas" width="960" height="540"></canvas>   -->
         <!-- Full HD size -->
-        <!-- <canvas id="myCanvas" width="1920" height="1080"></canvas>   -->
+        <canvas id="myCanvas" width="1920" height="1080"></canvas>  
 
         <button id="recordBtn">Start Recording</button>
         <div id="divClock"></div>
@@ -37,7 +37,7 @@
           var canvasH = canvas.height;
 
           var canvasScale = (canvasW / 960);
-          var leftPositionBar = (canvasScale == 2)?250:160;
+          var leftPositionBar = (canvasScale == 2)?290:160;
 
           ctx.fillRect(0, 0, canvasW, canvasH);
           //
@@ -94,7 +94,7 @@
             //draw year
             ctx.fillStyle = "#BA6352";
             ctx.font = (32 * canvasScale) + "px Arial";
-            ctx.fillText(2016 + currentLoop - 1, canvasW / 2 - 20, canvasH - 20); //don't know why current Loop is latency
+            ctx.fillText(2016 + currentLoop - 1, canvasW / 2 - 30 * canvasScale, canvasH - 20); //don't know why current Loop is latency
 
             if (!animationStart) animationStart = timestamp;
             const progress = Math.min((timestamp - animationStart) / duration, 1);
