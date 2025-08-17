@@ -1,0 +1,20 @@
+      body {
+        margin: 0;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* height: 100vh; */
+      }
+      canvas {
+        background: white;
+        display: block;
+        border: 1px solid #ccc;
+      }
+      button {
+        margin-top: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }

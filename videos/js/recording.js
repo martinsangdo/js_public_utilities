@@ -30,12 +30,6 @@ function saveRecording() {
     a.click();
 }
 
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d', { alpha: false }); // alpha false for better performance
-ctx.fillStyle = '#fff'; //white color
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-//
-
 // Recording logic
 const recordBtn = document.getElementById('recordBtn');
 let recorder, chunks = [], recording = false;

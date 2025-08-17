@@ -4,28 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bar chart animation</title>
-  <style>
-    body {
-      margin: 0;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    canvas {
-      background: white;
-      display: block;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-  </style>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/bar_horizon_styles.css"/>
+
+    <script src="js/common.js"></script>
   </head>
     <body>
         <canvas id="myCanvas" width="960" height="540"></canvas>  <!-- for testing animation -->
@@ -33,53 +15,43 @@
 
         <button id="recordBtn">Start Recording</button>
 
-        <script src="js/recording.js"></script>
+        
+
+        <script src="js/bar_chart_data.js"></script>
+        <script src="js/draw_bars_horizontal.js"></script>
+
         <script>
-            const duration = 10; // seconds
-            const numberStart = 100;
-            const numberEnd = 200;
+          get_max_values();
 
-            const rectY = 150, rectW = 200, rectH = 100;
-            const startX = 0;
-            const endX = canvas.width - rectW;
+          const canvas = document.getElementById('myCanvas');
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff'; //white color
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            let startTime = null;
+          const data = [
+            { label: 'Burkina Faso', value: 25 },
+            { label: 'Congo', value: 2143 },
+            { label: 'Mexico', value: 4275 },
+            { label: 'Pakistan', value: 1086 },
+            { label: 'Palestine', value: 0 },
+            { label: 'Russia', value: 70 },
+            { label: 'Somalia', value: 2055 },
+            { label: 'Sudan', value: 1894 },
+            { label: 'Syria', value: 53851 },
+            { label: 'Ukraine', value: 697 },
+          ];
 
-            function animate(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = (timestamp - startTime) / 1000; // seconds
+          // Layout settings
+          const margins = { top: 28, right: 24, bottom: 36, left: 120 };
+          const gridLineCount = 5; // vertical grid lines
+          const barRadius = 8;
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+          // Store bar hitboxes for hover tooltip
+          let barRects = [];
 
-                if (elapsed <= duration) {
-                    // Calculate animation progress (0 to 1)
-                    const progress = elapsed / duration;
-
-                    // Rectangle X position (left to right)
-                    const rectX = startX + (endX - startX) * progress;
-
-                    // Countdown number from 100 to 200
-                    const number = numberStart + (numberEnd - numberStart) * progress;
-
-                    // Draw rectangle
-                    ctx.fillStyle = 'skyblue';
-                    ctx.fillRect(rectX, rectY, rectW, rectH);
-
-                    // Draw number centered inside rectangle
-                    ctx.fillStyle = 'black';
-                    ctx.font = '48px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(Math.floor(number), rectX + rectW / 2, rectY + rectH / 2);
-                }
-
-                if (elapsed < duration) {
-                    requestAnimationFrame(animate);
-                }
-            }
-
-            requestAnimationFrame(animate);
+          drawBars();
         
         </script>
+        <script src="js/recording.js"></script>
     </body>
 </html>
