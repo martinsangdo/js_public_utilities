@@ -1,112 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Animated Horizontal Bar Chart</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #f4f4f4;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-    canvas {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Animated Bar Chart</title>
+<style>
+  body {
+    background: #f9f9f9;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  canvas {
+    border: 1px solid #ccc;
+    background: #fff;
+  }
+</style>
 </head>
 <body>
-  <canvas id="chart" width="800" height="500"></canvas>
+<canvas id="barChart" width="800" height="500"></canvas>
 
-  <script>
-    const canvas = document.getElementById("chart");
-    const ctx = canvas.getContext("2d");
+<div id="divClock"></div>
 
-    let bars = Array.from({length: 10}, (_, i) => ({
-      label: `Item ${i+1}`,
-      value: Math.floor(Math.random() * 100) + 10,
-      currentValue: 0,
-      targetValue: 0,
-      y: 0
-    }));
+<script>
+const canvas = document.getElementById("barChart");
+const ctx = canvas.getContext("2d");
 
-    // Sort ascending
-    function sortBars() {
-      bars.sort((a,b) => a.value - b.value);
-    }
+let colors = [
+  "#e6194b","#3cb44b","#ffe119","#4363d8","#f58231",
+  "#911eb4","#46f0f0","#f032e6","#bcf60c","#fabebe"
+];
+let labels = ["A","B","C","D","E","F","G","H","I","J"];
 
-    // Draw chart
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+// Initial random data
+let data = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
 
-      const barHeight = 30;
-      const gap = 15;
-      const chartHeight = bars.length * (barHeight + gap);
+// Target data (changes every 5s)
+let targetData = [...data];
+let animationStart = null;
+const duration = 10000; //animation time
+const delay_each_animation = 2000;  //break time between animation
 
-      // Find max value for scaling
-      const maxValue = Math.max(...bars.map(b => b.currentValue), 100);
+// Position cache for smooth reorder
+let positions = labels.map((_, i) => i);
 
-      bars.forEach((bar, i) => {
-        const y = 40 + i * (barHeight + gap);
-        const width = (bar.currentValue / maxValue) * (canvas.width - 200);
+function draw(timestamp) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Background bar
-        ctx.fillStyle = "#e0e0e0";
-        ctx.fillRect(150, y, canvas.width - 200, barHeight);
+  if (!animationStart) animationStart = timestamp;
+  const progress = Math.min((timestamp - animationStart) / duration, 1);
 
-        // Animated bar
-        ctx.fillStyle = "#4CAF50";
-        ctx.fillRect(150, y, width, barHeight);
+  // Interpolate values
+  let currentData = data.map((d, i) => d + (targetData[i] - d) * progress);
 
-        // Label
-        ctx.fillStyle = "#333";
-        ctx.font = "16px Arial";
-        ctx.textAlign = "right";
-        ctx.fillText(bar.label, 140, y + barHeight/2 + 5);
+  // Sort bars by currentData values
+  let sortedIndices = currentData.map((v, i) => [v, i]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
 
-        // Value with animation (count up/down)
-        ctx.textAlign = "left";
-        ctx.fillText(Math.round(bar.currentValue), 160 + width, y + barHeight/2 + 5);
-      });
-    }
+  // Smooth position transition
+  let targetPositions = {};
+  sortedIndices.forEach((id, idx) => targetPositions[id] = idx);
 
-    // Animation loop
-    function animate() {
-      let done = true;
-      bars.forEach(bar => {
-        // Smooth transition for bar length
-        if (Math.abs(bar.currentValue - bar.value) > 0.5) {
-          bar.currentValue += (bar.value - bar.currentValue) * 0.1;
-          done = false;
-        } else {
-          bar.currentValue = bar.value;
-        }
-      });
+  positions = positions.map((p, i) => {
+    return p + (targetPositions[i] - p) * 0.1; // easing movement
+  });
 
-      draw();
-      requestAnimationFrame(animate);
-    }
+  // Draw bars
+  const barHeight = 30;
+  const gap = 15;
+  sortedIndices.forEach((id) => {
+    const value = currentData[id];
+    const y = 50 + positions[id] * (barHeight + gap);
+    const width = value * 5; // scaling factor
 
-    // Update data
-    function updateData() {
-      bars.forEach(bar => {
-        bar.value = Math.floor(Math.random() * 200) + 20;
-      });
-      sortBars();
-    }
+    ctx.fillStyle = colors[id];
+    ctx.fillRect(150, y, width, barHeight);
 
-    // Start
-    sortBars();
-    animate();
+    // Label
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Arial";
+    ctx.fillText(labels[id], 100, y + barHeight/1.5);
 
-    // Change data every 5 seconds
-    setInterval(updateData, 5000);
-  </script>
+    // Value (animated counting)
+    let displayVal = Math.floor(data[id] + (targetData[id] - data[id]) * progress);
+    ctx.fillText(displayVal, 160 + width, y + barHeight/1.5);
+  });
+
+  if (progress < 1) {
+    requestAnimationFrame(draw);
+  } else {
+    // After finish, lock new data
+    data = [...targetData];
+    positions = sortedIndices.map((id, idx)=>idx);
+
+    // Trigger next change
+    setTimeout(() => {
+      targetData = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
+      animationStart = null;
+      requestAnimationFrame(draw);
+    }, delay_each_animation);
+  }
+}
+
+// Start animation
+requestAnimationFrame(draw);
+
+function updateClock() {
+  const now = new Date();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('divClock').textContent = `${minutes}:${seconds}`;
+}
+
+// Initial call
+updateClock();
+// Update every second
+setInterval(updateClock, 1000);
+
+</script>
 </body>
 </html>
