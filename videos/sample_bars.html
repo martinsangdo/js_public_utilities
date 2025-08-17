@@ -30,7 +30,7 @@ let colors = [
   "#e6194b","#3cb44b","#ffe119","#4363d8","#f58231",
   "#911eb4","#46f0f0","#f032e6","#bcf60c","#fabebe"
 ];
-let labels = ["A","B","C","D","E","F","G","H","I","J"];
+let labels = ["Burkina Faso", "Congo", "Mexico", "Pakistan", "Palestine", "Russia", "Somalia", "Sudan", "Syria", "Ukraine"];
 
 // Initial random data
 let data = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
@@ -39,7 +39,7 @@ let data = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
 let targetData = [...data];
 let animationStart = null;
 const duration = 10000; //animation time
-const delay_each_animation = 2000;  //break time between animation
+const delay_each_animation = 3000;  //break time between animation
 
 // Position cache for smooth reorder
 let positions = labels.map((_, i) => i);
@@ -78,7 +78,7 @@ function draw(timestamp) {
     // Label
     ctx.fillStyle = "#000";
     ctx.font = "16px Arial";
-    ctx.fillText(labels[id], 100, y + barHeight/1.5);
+    ctx.fillText(labels[id], 20, y + barHeight/1.5);
 
     // Value (animated counting)
     let displayVal = Math.floor(data[id] + (targetData[id] - data[id]) * progress);

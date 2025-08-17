@@ -14,42 +14,103 @@
         <!-- <canvas id="myCanvas" width="1920" height="1080"></canvas> -->  <!-- Full HD size -->
 
         <button id="recordBtn">Start Recording</button>
-
-        
+        <div id="divClock"></div>
 
         <script src="js/bar_chart_data.js"></script>
         <script src="js/draw_bars_horizontal.js"></script>
 
         <script>
+          // Initial call
+          updateClock();
+          // Update every second
+          setInterval(updateClock, 1000);
           get_max_values();
 
           const canvas = document.getElementById('myCanvas');
           const ctx = canvas.getContext('2d');
           ctx.fillStyle = '#fff'; //white color
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          const data = [
-            { label: 'Burkina Faso', value: 25 },
-            { label: 'Congo', value: 2143 },
-            { label: 'Mexico', value: 4275 },
-            { label: 'Pakistan', value: 1086 },
-            { label: 'Palestine', value: 0 },
-            { label: 'Russia', value: 70 },
-            { label: 'Somalia', value: 2055 },
-            { label: 'Sudan', value: 1894 },
-            { label: 'Syria', value: 53851 },
-            { label: 'Ukraine', value: 697 },
+          //
+          let colors = [
+            "#e6194b","#3cb44b","#ffe119","#4363d8","#f58231",
+            "#911eb4","#46f0f0","#f032e6","#bcf60c","#fabebe"
           ];
+          let labels = ["Burkina Faso", "Congo", "Mexico", "Pakistan", "Palestine", "Russia", "Somalia", "Sudan", "Syria", "Ukraine"];
+          //
+          // Initial random data
+          let data = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
 
-          // Layout settings
-          const margins = { top: 28, right: 24, bottom: 36, left: 120 };
-          const gridLineCount = 5; // vertical grid lines
-          const barRadius = 8;
+          // Target data (changes every 5s)
+          let targetData = [...data];
+          let animationStart = null;
+          const duration = 10000; //animation time
+          const delay_each_animation = 3000;  //break time between animation
 
-          // Store bar hitboxes for hover tooltip
-          let barRects = [];
+          // Position cache for smooth reorder
+          let positions = labels.map((_, i) => i);
 
-          drawBars();
+          function draw(timestamp) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!animationStart) animationStart = timestamp;
+            const progress = Math.min((timestamp - animationStart) / duration, 1);
+
+            // Interpolate values
+            let currentData = data.map((d, i) => d + (targetData[i] - d) * progress);
+
+            // Sort bars by currentData values
+            let sortedIndices = currentData.map((v, i) => [v, i]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+
+            // Smooth position transition
+            let targetPositions = {};
+            sortedIndices.forEach((id, idx) => targetPositions[id] = idx);
+
+            positions = positions.map((p, i) => {
+              return p + (targetPositions[i] - p) * 0.1; // easing movement
+            });
+
+            // Draw bars
+            const barHeight = 30;
+            const gap = 15;
+            sortedIndices.forEach((id) => {
+              const value = currentData[id];
+              const y = 50 + positions[id] * (barHeight + gap);
+              const width = value * 5; // scaling factor
+
+              ctx.fillStyle = colors[id];
+              ctx.fillRect(150, y, width, barHeight);
+
+              // Label
+              ctx.fillStyle = "#000";
+              ctx.font = "16px Arial";
+              ctx.fillText(labels[id], 20, y + barHeight/1.5);
+
+              // Value (animated counting)
+              let displayVal = Math.floor(data[id] + (targetData[id] - data[id]) * progress);
+              ctx.fillText(displayVal, 160 + width, y + barHeight/1.5);
+            });
+
+            if (progress < 1) {
+              requestAnimationFrame(draw);
+            } else {
+              // After finish, lock new data
+              data = [...targetData];
+              positions = sortedIndices.map((id, idx)=>idx);
+
+              // Trigger next change
+              setTimeout(() => {
+                targetData = Array.from({length: 10}, () => Math.floor(Math.random() * 100) + 10);
+                animationStart = null;
+                requestAnimationFrame(draw);
+              }, delay_each_animation);
+            }
+          }
+
+          // Start animation
+          requestAnimationFrame(draw);
+
+
+
         
         </script>
         <script src="js/recording.js"></script>
