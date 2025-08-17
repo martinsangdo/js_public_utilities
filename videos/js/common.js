@@ -1,5 +1,5 @@
-function print(str){
-    console.log(str);
+function print(label, str){
+    console.log(label, str);
 }
 
 function updateClock(divId) {
