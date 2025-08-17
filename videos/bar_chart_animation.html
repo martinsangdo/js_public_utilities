@@ -94,7 +94,7 @@
             //draw year
             ctx.fillStyle = "#BA6352";
             ctx.font = (32 * canvasScale) + "px Arial";
-            ctx.fillText(2016 + currentLoop - 3, canvasW / 2 - 20, canvasH - 20); //don't know why current Loop is latency
+            ctx.fillText(2016 + currentLoop - 1, canvasW / 2 - 20, canvasH - 20); //don't know why current Loop is latency
 
             if (!animationStart) animationStart = timestamp;
             const progress = Math.min((timestamp - animationStart) / duration, 1);
