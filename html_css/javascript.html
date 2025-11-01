@@ -1,17 +1,87 @@
-<html><body>
+<html>
+    <head>
+        <title>Javascript</title>
+    </head>
+<body>
     <script>
          function loadDoc() {
            const xhttp = new XMLHttpRequest();
            xhttp.onload = function() {
              const rawData = JSON.parse(xhttp.responseText);
-             document.getElementById("demo").innerHTML = rawData['products'][0]['title'];
+            //  document.getElementById("demo").innerHTML = rawData['products'][0]['title'];
+             show_product_list(rawData['products']);
            }
            xhttp.open("GET", "https://dummyjson.com/products");
            xhttp.send();
          }
+         function show_product_list(products){
+            const table = document.getElementById('productTable');
+            table.innerHTML = ''; // Clear loading message
+
+            // Display only first 5 products for demo
+            products.slice(0, 5).forEach(p => {
+                const row = document.createElement('tr');
+
+                const imgCell = document.createElement('td');
+                const img = document.createElement('img');
+                img.src = p.images[0];
+                img.width = 60;
+                img.height = 60;
+                imgCell.appendChild(img);
+
+                const titleCell = document.createElement('td');
+                titleCell.textContent = p.title;
+
+                const priceCell = document.createElement('td');
+                priceCell.textContent = `$${p.price}`;
+
+                row.appendChild(imgCell);
+                row.appendChild(titleCell);
+                row.appendChild(priceCell);
+                table.appendChild(row);
+            });
+         }
+         //
+         function calculateArea(width, height){
+            return width * height;
+         }
+         let value = calculateArea(4, 5);
+        //  alert(value);
+         //
+
+         function exchange_money(){
+            var input_money = document.getElementById("txt_amount").value;
+            var money_in_vnd = input_money * 24683;
+            document.getElementById('div_exchanged_money').innerHTML = money_in_vnd;
+         }
+
        </script>
     
     <button type="button" onclick="loadDoc();">Get data</button>
-    <div id="demo"></div>
+    <div id="demo">
+        <table border="1" cellpadding="8">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody id="productTable">
+              <tr><td colspan="3"></td></tr>
+            </tbody>
+          </table>
+    </div>
+
+
+       <!-- <div>
+            <label>Input amount in USD:</label>
+            <input type="textbox" id="txt_amount"/>
+            <input type="button" onclick="exchange_money();" value="Exchange"/>
+            <div id="div_exchanged_money"></div>
+       </div> -->
+
+
+
      </body>
     </html>
