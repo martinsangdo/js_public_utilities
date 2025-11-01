@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Comments list with paging</title>
+</head>
+<body>
+   <h1>Comments</h1>
+  <div>
+    <img src="https://i.pravatar.cc/300?u=jany" width="50" height="50"/>
+    <b>Lanla J.</b><br/>
+    2025-07-29 13:38<br/>
+    <p>
+      <b>Chất lượng sản phẩm:</b> chất lượng tốt lắm nha shop ơi, bé rất thích nè.<br>
+    </p>
+    👍 4
+  </div>
+  <hr>
+  
+  <div>
+    <img src="https://i.pravatar.cc/300?u=kimJeong" width="50" height="50"/>
+    <b>Lake Kim</b><br/>
+    2025-03-29 2:38<br/>
+    <p>
+      <b>Chất lượng sản phẩm:</b> Giao hàng nhanh.<br>
+    </p>
+    👍 2
+  </div>
+
+  <div id="pagination">
+    <button id="prev-btn">Prev</button>
+    <a href="">1</a>&nbsp;&nbsp;<a href="">2</a>
+    <button id="next-btn">Next</button>
+  </div>
+
+  <hr>
+
+  <h3>Add a Comment</h3>
+  <form id="comment-form" onsubmit="return false;">
+    <label for="author-input">Name:</label><br>
+    <input id="author-input" type="text" placeholder="Your name"><br><br>
+
+    <label for="comment-input">Comment:</label><br>
+    <textarea id="comment-input" rows="4" cols="50" placeholder="Write your comment..."></textarea><br><br>
+
+    <button id="submit-btn" type="button">Submit</button>
+  </form>
+
+</body>
+</html>
