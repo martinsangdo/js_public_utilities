@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-processor-service
+spec:
+  selector:
+    app: data-processor
+  ports:
+    - port: 80
+      targetPort: 8000 # No NodePort needed; only internal calls

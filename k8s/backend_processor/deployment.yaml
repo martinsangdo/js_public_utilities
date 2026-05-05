@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-processor-deployment
+spec:
+  replicas: 2 # Start with 2 pods per node? Actually, this is total pods.
+  selector:
+    matchLabels:
+      app: data-processor
+  template:
+    metadata:
+      labels:
+        app: data-processor
+    spec:
+      containers:
+      - name: processor-container
+        image: your-dockerhub-username/data-processor:v1
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "50m"    # Minimum CPU needed
+            memory: "64Mi"
+          limits:
+            cpu: "200m"   # Maximum allowed
+            memory: "256Mi"

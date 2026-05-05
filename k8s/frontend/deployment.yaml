@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: your-dockerhub-username/frontend:v1
+        imagePullPolicy: Always
+        env:
+        - name: API_URL
+          value: "http://192.168.49.2:31000" # Update this with your Minikube IP
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"

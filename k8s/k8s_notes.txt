@@ -1,0 +1,87 @@
+kubectl create secret generic mongo-db-creds --from-literal=MONGO_URL='your-atlas-connection-string'
+
+# 1. Start Minikube with 4 nodes (if not already running)
+minikube start --nodes 4 --driver=docker --cpus=1 --memory=900mb
+
+# 2. Create the Secret for MongoDB Atlas
+kubectl create secret generic mongo-db-creds --from-literal=MONGO_URL='mongodb+srv://user:pass@cluster.mongodb.net/dbname'
+
+# 3. Get your Minikube IP (you will need this for the Frontend YAML)
+minikube ip
+
+====
+# Auto-scale the AI Platform
+kubectl autoscale deployment ai-platform-deployment --cpu-percent=50 --min=2 --max=3
+
+# Auto-scale the Data Processor
+kubectl autoscale deployment data-processor-deployment --cpu-percent=50 --min=2 --max=3
+
+
+====
+# 4. Deploy the Data Processor (Worker 3)
+kubectl apply -f k8s/data-processor/deployment.yaml
+kubectl apply -f k8s/data-processor/service.yaml
+
+# 5. Deploy the AI Platform (Worker 2)
+kubectl apply -f k8s/ai-platform/deployment.yaml
+kubectl apply -f k8s/ai-platform/service.yaml
+
+# 6. Deploy the Frontend (Worker 1)
+# Make sure you updated the API_URL in the YAML with the IP from step 3!
+kubectl apply -f k8s/frontend/deployment.yaml
+kubectl apply -f k8s/frontend/service.yaml
+
+====
+Once applied, use these commands to confirm everything is running correctly across your 8GB PC's nodes.
+Command,Purpose
+kubectl get nodes,"Confirm all 4 nodes (minikube, m02, m03, m04) are Ready."
+kubectl get pods -o wide,Verify pods are distributed across different nodes.
+kubectl get svc,Check that frontend-service and ai-platform-service have NodePorts.
+kubectl logs -l app=ai-platform,Check if Worker 2 successfully connected to MongoDB.
+
+===
+Since you are using NodePorts, you need to "open the tunnel" to let your local browser talk to the cluster.
+# Run this in a separate terminal window and keep it open
+minikube tunnel
+
+====
+If you need to reset the environment for the next class:
+kubectl delete -f k8s/frontend/
+kubectl delete -f k8s/ai-platform/
+kubectl delete -f k8s/data-processor/
+# Or delete everything at once:
+kubectl delete all --all
+
+
+
+
+
+========
+4. How to Demonstrate "High Requests" in Class
+
+Since your FastAPI apps are very small, they won't hit 50% CPU just by clicking the button once. To show the autoscaling in action, you can "stress" the pods.
+
+    Watch the HPA:
+    kubectl get hpa -w
+
+    Generate Load:
+    Run a simple loop in your terminal to hit the endpoint repeatedly:
+    Bash
+
+    while true; do curl -s http://<MINIKUBE_IP>:32000 > /dev/null; done
+
+    The Result:
+    After about 1–2 minutes, students will see the REPLICAS column in the HPA status jump from 2 to 3.
+
+
+
+=========
+    Summary Checklist for 2-to-3 Scaling
+
+    Replicas: Set replicas: 2 in your Deployment files.
+
+    Resources: Ensure requests are defined (HPA depends on this).
+
+    Metrics: Run minikube addons enable metrics-server.
+
+    HPA: Apply the kubectl autoscale command.
