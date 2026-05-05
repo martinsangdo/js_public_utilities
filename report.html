@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Revenue Processor - K8s Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .summary-card {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .loader {
+            display: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Microservice Revenue Analysis</h2>
+        <p><strong>Architecture Path:</strong> Frontend → Worker 2 (AI Platform) → Worker 3 (Data Processor)</p>
+
+        <div class="controls">
+            <button onclick="fetchData()">Run Full Flow Analysis</button>
+            <span id="loader" class="loader"> Processing across nodes...</span>
+        </div>
+
+        <div id="summary" class="summary-card">
+            <h3>Insights from Worker Node 3:</h3>
+            <p id="total-rev"></p>
+            <p id="avg-rev"></p>
+        </div>
+
+        <table id="revenue-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Transactions</th>
+                    <th>Amount (USD)</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Data will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const loader = document.getElementById('loader');
+            const summaryDiv = document.getElementById('summary');
+            const tableBody = document.getElementById('table-body');
+
+            // Show loader and clear old data
+            loader.style.display = 'inline';
+            tableBody.innerHTML = '';
+            summaryDiv.style.display = 'none';
+
+            try {
+                // Point this to your Worker Node 2 Service (or Minikube Tunnel IP)
+                const response = await fetch('http://<EXTERNAL_IP_OF_WORKER_2>/revenue/analyze');
+                const data = await response.json();
+
+                // 1. Display the Summary Insights (from Worker 3)
+                document.getElementById('total-rev').innerText = "Total Monthly Revenue: $" + data.summary.total_revenue;
+                document.getElementById('avg-rev').innerText = "Average Daily: $" + data.summary.average_daily;
+                summaryDiv.style.display = 'block';
+
+                // 2. Display the Raw Data Table (from MongoDB via Worker 2)
+                data.raw_data.forEach(item => {
+                    const row = `<tr>
+                    <td>${item.date}</td>
+                    <td>${item.category}</td>
+                    <td>${item.transactions}</td>
+                    <td>$${item.amount.toFixed(2)}</td>
+                </tr>`;
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (error) {
+                alert("Error communicating with Worker Node 2. Ensure Minikube tunnel is running!");
+                console.error(error);
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
