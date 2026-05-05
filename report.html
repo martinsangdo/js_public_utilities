@@ -123,7 +123,7 @@
 
             try {
                 // Point this to your Worker Node 2 Service (or Minikube Tunnel IP)
-                const response = await fetch('http://<EXTERNAL_IP_OF_WORKER_2>/revenue/analyze');
+                const response = await fetch('__API_URL__/revenue/analyze');
                 const data = await response.json();
 
                 // 1. Display the Summary Insights (from Worker 3)
