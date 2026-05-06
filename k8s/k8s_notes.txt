@@ -89,5 +89,14 @@ Since your FastAPI apps are very small, they won't hit 50% CPU just by clicking 
 ====
     minikube delete -p my-cluster
 
-    ===
+    === add new pod
     kubectl scale deployment web-app-deployment --replicas=2
+
+    == restart when have new Docker image:
+    kubectl rollout restart deployment web-app-deployment
+
+minikube image load python_fastapi_finance:v1 -p my-simple-cluster
+=== 
+kubectl create secret generic backend-secrets \
+  --from-literal=DATABASE_NAME='fastapi_finance' \
+  --from-literal=MONGODB_URL='mongodb+srv://test_python:4FyWFBf36zWjIc50@disneybook.iefry.mongodb.net/?retryWrites=true&w=majority&appName=DisneyBook'

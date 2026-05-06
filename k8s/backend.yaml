@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: my-simple-cluster-m03
+      containers:
+      - name: backend-container
+        image: python_fastapi_finance:v1
+        ports:
+        - containerPort: 8000
+        env:
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: DATABASE_NAME
+          - name: MONGODB_URL
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: MONGODB_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-internal-service
+spec:
+  type: ClusterIP # Internal only so the frontend can talk to it
+  selector:
+    app: backend
+  ports:
+    - port: 8000
+      targetPort: 8000
