@@ -111,6 +111,30 @@
     </div>
 
     <script>
+        const fetchBackendData = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/users/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Success:", data);
+                return data;
+            } catch (error) {
+                console.error("Fetch failed:", error);
+            }
+        };
+
+        // Execute the call
+        fetchBackendData();
+
         async function fetchData() {
             const loader = document.getElementById('loader');
             const summaryDiv = document.getElementById('summary');

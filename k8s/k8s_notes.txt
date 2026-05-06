@@ -95,7 +95,7 @@ Since your FastAPI apps are very small, they won't hit 50% CPU just by clicking 
     == restart when have new Docker image:
     kubectl rollout restart deployment web-app-deployment
 
-minikube image load python_fastapi_finance:v1 -p my-simple-cluster
+minikube image load python_fastapi_finance:v1 -p my-simple-cluster --overwrite=true
 === 
 kubectl create secret generic backend-secrets \
   --from-literal=DATABASE_NAME='fastapi_finance' \

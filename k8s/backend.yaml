@@ -16,7 +16,8 @@ spec:
         kubernetes.io/hostname: my-simple-cluster-m03
       containers:
       - name: backend-container
-        image: python_fastapi_finance:v1
+        image: python_fastapi_finance:v2
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         env:
