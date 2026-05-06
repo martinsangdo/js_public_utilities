@@ -1,7 +1,7 @@
 kubectl create secret generic mongo-db-creds --from-literal=MONGO_URL='your-atlas-connection-string'
 
 # 1. Start Minikube with 4 nodes (if not already running)
-minikube start --nodes 4 --driver=docker --cpus=1 --memory=900mb
+minikube start --nodes 4 --driver=docker --cpus=1 --memory=900mb -p my-advanced-cluster
 
 # 2. Create the Secret for MongoDB Atlas
 kubectl create secret generic mongo-db-creds --from-literal=MONGO_URL='mongodb+srv://user:pass@cluster.mongodb.net/dbname'
@@ -85,3 +85,9 @@ Since your FastAPI apps are very small, they won't hit 50% CPU just by clicking 
     Metrics: Run minikube addons enable metrics-server.
 
     HPA: Apply the kubectl autoscale command.
+
+====
+    minikube delete -p my-cluster
+
+    ===
+    kubectl scale deployment web-app-deployment --replicas=2
