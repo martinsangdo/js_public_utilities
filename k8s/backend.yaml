@@ -13,10 +13,10 @@ spec:
         app: backend
     spec:
       nodeSelector:
-        kubernetes.io/hostname: my-simple-cluster-m03
+        kubernetes.io/hostname: my-simple-cluster-2-m03
       containers:
       - name: backend-container
-        image: python_fastapi_finance:v2
+        image: python_fastapi_finance:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000

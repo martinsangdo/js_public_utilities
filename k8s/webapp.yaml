@@ -13,10 +13,10 @@ spec:
         app: web-app
     spec:
       nodeSelector:
-        kubernetes.io/hostname: my-simple-cluster-m02
+        kubernetes.io/hostname: my-simple-cluster-2-m02
       containers:
       - name: web-container
-        image: simple-web-app:v2
+        image: simple-web-app:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

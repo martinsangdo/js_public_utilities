@@ -100,3 +100,6 @@ minikube image load python_fastapi_finance:v1 -p my-simple-cluster --overwrite=t
 kubectl create secret generic backend-secrets \
   --from-literal=DATABASE_NAME='fastapi_finance' \
   --from-literal=MONGODB_URL='mongodb+srv://...'
+
+  === autoscale
+  kubectl autoscale deployment ai-platform-deployment --min=8 --max=12 --cpu-percent=50
