@@ -1,0 +1,26 @@
+# 1. Use 'latest' (Triggers DL3006)
+FROM nginx:latest
+
+# 2. Switch to root explicitly (Triggers DL3002)
+USER root
+
+# 3. Use 'cd' instead of WORKDIR (Triggers DL3003)
+RUN cd /usr/share/nginx/html
+
+# 4. Use apt-get without cleaning up or pinning versions (Triggers DL3008, DL3009)
+# Even though alpine uses 'apk', if this were Ubuntu, it's a major issue.
+# On Alpine, using 'apk add' without '--no-cache' triggers DL3018.
+RUN apk add curl
+
+# 5. Multiple RUN commands that should be joined (Triggers DL3059)
+RUN apk add vim
+
+# 6. Use ADD instead of COPY for local files (Triggers DL3020)
+ADD . /usr/share/nginx/html
+
+# 7. Use a label without a schema (Triggers DL3000)
+LABEL maintainer=me
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
