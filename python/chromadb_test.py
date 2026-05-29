@@ -36,6 +36,8 @@ for i, chunk in enumerate(chunks):
 # =====================================================================
 # 'PersistentClient' saves the data to a local folder instead of keeping it in RAM
 client = chromadb.PersistentClient(path="./my_local_rag_db")
+# Print current collections just to verify we aren't erasing your old work
+print("📋 Existing collections in your database:", client.list_collections())
 
 # Create or retrieve the collection. 
 # Chroma automatically assigns its default embedding model (all-MiniLM-L6-v2) under the hood.
